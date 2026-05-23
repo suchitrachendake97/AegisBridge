@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AegisBridge — AI Bridge Inspector</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#07090f;--s1:#0d1117;--s2:#161b22;
+  --b1:rgba(56,189,248,0.1);--b2:rgba(56,189,248,0.2);
+  --blue:#38bdf8;--violet:#818cf8;--green:#34d399;
+  --red:#f87171;--amber:#fbbf24;
+  --txt:#e2e8f0;--sub:#94a3b8;--dim:#475569;
+  --F:'Inter',sans-serif;--M:'JetBrains Mono',monospace;--D:'Bebas Neue',cursive;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--txt);font-family:var(--F);display:flex;flex-direction:column}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 50% at 8% 55%,rgba(56,189,248,.06) 0%,transparent 70%),
+    radial-gradient(ellipse 50% 60% at 92% 15%,rgba(129,140,248,.05) 0%,transparent 70%),
+    linear-gradient(rgba(56,189,248,.02) 1px,transparent 1px) 0 0/42px 42px,
+    linear-gradient(90deg,rgba(56,189,248,.02) 1px,transparent 1px) 0 0/42px 42px
+}
+
+/* ─ TOP BAR ─ */
+.bar{position:relative;z-index:10;flex-shrink:0;height:52px;
+  display:flex;align-items:center;padding:0 20px;gap:12px;
+  background:rgba(7,9,15,.97);border-bottom:1px solid var(--b1);backdrop-filter:blur(16px)}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-sq{width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,var(--blue),var(--violet));
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+  box-shadow:0 0 14px rgba(56,189,248,.35)}
+.logo-n{font-family:var(--D);font-size:20px;letter-spacing:3px;color:#fff}
+.logo-s{font-size:9px;color:var(--dim);letter-spacing:1.5px}
+.bar-mid{flex:1;display:flex;justify-content:center}
+.alive{display:flex;align-items:center;gap:5px;padding:3px 11px;border-radius:20px;
+  background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);
+  font-size:10px;font-family:var(--M);color:var(--green)}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 1.6s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.bar-r{display:flex;align-items:center;gap:8px}
+.clk{font-family:var(--M);font-size:11px;color:var(--dim)}
+.keybtn{padding:5px 12px;border-radius:7px;
+  background:rgba(56,189,248,.09);border:1px solid rgba(56,189,248,.28);
+  color:var(--blue);font-size:11px;font-weight:500;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:5px}
+.keybtn:hover{background:rgba(56,189,248,.18);border-color:rgba(56,189,248,.5)}
+
+/* ─ LAYOUT ─ */
+.wrap{position:relative;z-index:1;flex:1;display:flex;overflow:hidden}
+
+/* ─ SIDEBAR ─ */
+.side{width:265px;flex-shrink:0;display:flex;flex-direction:column;
+  border-right:1px solid var(--b1);background:rgba(7,9,15,.65);
+  overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--dim) transparent}
+.sec{padding:12px;border-bottom:1px solid var(--b1)}
+.sec-t{font-size:9px;font-weight:600;letter-spacing:2px;color:var(--dim);
+  text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:5px}
+.sec-t::after{content:'';flex:1;height:1px;background:var(--b1)}
+
+/* drop */
+.drp{border:2px dashed rgba(56,189,248,.16);border-radius:9px;
+  padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s}
+.drp:hover,.drp.on{border-color:rgba(56,189,248,.45);background:rgba(56,189,248,.04)}
+.drp input{display:none}
+.drp-i{font-size:22px;margin-bottom:4px}
+.drp-t{font-size:11px;color:var(--sub);line-height:1.5}
+.drp-t b{color:var(--blue);font-weight:600}
+.drp-h{font-size:9px;color:var(--dim);margin-top:3px;font-family:var(--M)}
+.thumbs{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.th{width:54px;height:54px;border-radius:6px;overflow:hidden;
+  border:1.5px solid var(--b1);position:relative;transition:border-color .2s}
+.th:hover{border-color:var(--blue)}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.th .xx{position:absolute;top:2px;right:2px;display:none;
+  background:rgba(248,113,113,.88);border:none;border-radius:50%;
+  width:14px;height:14px;font-size:8px;color:#fff;cursor:pointer;
+  align-items:center;justify-content:center}
+.th:hover .xx{display:flex}
+
+.runbtn{width:100%;margin-top:8px;padding:10px;border:none;border-radius:8px;
+  background:linear-gradient(135deg,var(--blue),var(--violet));
+  font-family:var(--F);font-size:12px;font-weight:600;color:#fff;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px}
+.runbtn:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(56,189,248,.3)}
+.runbtn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.prg{display:none;margin-top:6px}
+.prg-l{font-size:9px;color:var(--sub);font-family:var(--M);margin-bottom:3px}
+.prg-b{height:3px;background:var(--b1);border-radius:2px;overflow:hidden}
+.prg-f{height:100%;background:linear-gradient(90deg,var(--blue),var(--violet));
+  width:0%;transition:width .35s ease;border-radius:2px}
+
+/* ring */
+.rw{display:flex;flex-direction:column;align-items:center;padding:3px 0}
+.rsvg{width:110px;height:110px}
+.rl{font-size:9px;color:var(--sub);font-family:var(--M);margin-top:2px}
+.rbdg{margin-top:6px;padding:3px 15px;border-radius:20px;font-size:10px;font-weight:600;
+  letter-spacing:2px;border:1px solid var(--dim);color:var(--dim);
+  text-transform:uppercase;font-family:var(--M)}
+
+/* metrics */
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.mc{background:var(--s1);border:1px solid var(--b1);border-radius:7px;padding:8px}
+.mc-n{font-size:8px;font-weight:600;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px}
+.mc-v{font-family:var(--D);font-size:18px;letter-spacing:1px}
+.mc-s{font-size:8px;color:var(--dim);margin-top:2px;font-family:var(--M)}
+.mb{height:3px;background:var(--b1);border-radius:2px;margin-top:4px;overflow:hidden}
+.mb-f{height:100%;border-radius:2px;transition:width .8s ease}
+
+/* alert */
+.al{border-radius:7px;padding:9px;border:1px solid var(--b1);
+  font-size:11px;line-height:1.5;display:flex;gap:7px}
+.al.info{background:rgba(56,189,248,.05);border-color:rgba(56,189,248,.18);color:var(--sub)}
+.al.safe{background:rgba(52,211,153,.05);border-color:rgba(52,211,153,.22);color:var(--green)}
+.al.warn{background:rgba(251,191,36,.05);border-color:rgba(251,191,36,.22);color:var(--amber)}
+.al.danger{background:rgba(248,113,113,.05);border-color:rgba(248,113,113,.22);color:var(--red)}
+.al-i{flex-shrink:0;font-size:13px}
+
+/* ─ CHAT ─ */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chd{flex-shrink:0;padding:10px 18px;border-bottom:1px solid var(--b1);
+  background:rgba(7,9,15,.82);display:flex;align-items:center;gap:9px}
+.ch-i{width:30px;height:30px;border-radius:8px;
+  background:linear-gradient(135deg,rgba(56,189,248,.15),rgba(129,140,248,.15));
+  border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:14px}
+.ch-n{font-size:13px;font-weight:600}
+.ch-s{font-size:10px;color:var(--sub);font-family:var(--M);margin-top:1px}
+.recb{display:none;margin-left:auto;align-items:center;gap:4px;
+  font-size:9px;color:var(--red);font-family:var(--M)}
+.recb.on{display:flex}
+.rd{width:5px;height:5px;border-radius:50%;background:var(--red);animation:blink .7s infinite}
+
+/* quick bar */
+.qbar{flex-shrink:0;display:flex;gap:5px;padding:6px 18px;
+  border-bottom:1px solid var(--b1);overflow-x:auto;scrollbar-width:none}
+.qbar::-webkit-scrollbar{display:none}
+.qb{flex-shrink:0;padding:4px 10px;border-radius:20px;background:var(--s1);
+  border:1px solid var(--b1);font-size:10px;color:var(--sub);cursor:pointer;
+  transition:all .2s;white-space:nowrap;font-family:var(--F)}
+.qb:hover{border-color:rgba(56,189,248,.4);color:var(--blue);background:rgba(56,189,248,.06)}
+
+/* messages */
+.msgs{flex:1;overflow-y:auto;padding:16px 18px;
+  display:flex;flex-direction:column;gap:11px;
+  scrollbar-width:thin;scrollbar-color:var(--dim) transparent}
+
+.msg{display:flex;gap:8px;max-width:88%;animation:pop .2s ease}
+@keyframes pop{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.msg.u{flex-direction:row-reverse;align-self:flex-end}
+.msg.a{align-self:flex-start}
+.av{width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:13px}
+.a .av{background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.25)}
+.u .av{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25)}
+.bub{padding:9px 13px;border-radius:12px;font-size:13px;line-height:1.78;max-width:100%}
+.a .bub{background:var(--s1);border:1px solid var(--b1);border-bottom-left-radius:3px}
+.u .bub{background:rgba(56,189,248,.11);border:1px solid rgba(56,189,248,.2);
+  border-bottom-right-radius:3px;color:#bae6fd}
+.bub b{color:var(--txt);font-weight:600}
+.bub i{color:var(--sub)}
+.bub-img{width:100%;max-width:230px;border-radius:8px;margin-bottom:7px;display:block;
+  border:1px solid var(--b1)}
+.chip{display:inline-block;padding:2px 7px;border-radius:4px;
+  font-size:9px;font-family:var(--M);border:1px solid;margin:2px}
+.cg{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.3);color:var(--green)}
+.cy{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.3);color:var(--amber)}
+.cr{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.3);color:var(--red)}
+.cb{background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.3);color:var(--blue)}
+.rh{font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--blue);
+  margin-bottom:7px;padding-bottom:6px;border-bottom:1px solid var(--b1);text-transform:uppercase}
+.cr-r{display:flex;flex-wrap:wrap;gap:3px;margin:5px 0}
+.sh{color:var(--blue);font-size:10px;font-weight:600;letter-spacing:1px;
+  text-transform:uppercase;margin:9px 0 3px;font-family:var(--M);display:block}
+
+.dots{display:flex;gap:4px;padding:3px 0}
+.td{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:td .9s infinite}
+.td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
+@keyframes td{0%,80%,100%{opacity:.2;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
+
+/* welcome */
+.wel{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:10px;text-align:center;padding:32px;animation:fu .45s ease}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.wi{font-size:48px;animation:fl 3s ease infinite}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.wt{font-family:var(--D);font-size:24px;letter-spacing:2px}
+.ws{font-size:12px;color:var(--sub);max-width:330px;line-height:1.8}
+.wst{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:5px}
+.wsi{background:var(--s1);border:1px solid var(--b1);border-radius:8px;
+  padding:8px 12px;font-size:11px;color:var(--sub);display:flex;align-items:center;gap:5px}
+.wsn{width:18px;height:18px;border-radius:50%;flex-shrink:0;
+  background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.28);
+  font-size:9px;font-weight:700;color:var(--blue);
+  display:flex;align-items:center;justify-content:center}
+
+/* ─ INPUT ─ */
+.inp{flex-shrink:0;padding:8px 18px 12px;
+  border-top:1px solid var(--b1);background:rgba(7,9,15,.94)}
+.vrow{display:flex;align-items:center;gap:6px;margin-bottom:7px;flex-wrap:wrap}
+.vl{font-size:9px;color:var(--dim);font-family:var(--M);letter-spacing:1px}
+.vs{background:var(--s1);border:1px solid var(--b1);color:var(--txt);
+  font-family:var(--M);font-size:9px;padding:2px 6px;border-radius:5px;
+  outline:none;cursor:pointer;max-width:140px}
+input[type=range]{width:44px;accent-color:var(--blue);cursor:pointer}
+.imgs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}
+.ip{position:relative;width:50px;height:50px;border-radius:6px;overflow:hidden;
+  border:1.5px solid rgba(56,189,248,.3)}
+.ip img{width:100%;height:100%;object-fit:cover;display:block}
+.ip .xp{position:absolute;top:1px;right:1px;background:rgba(248,113,113,.9);
+  border:none;border-radius:50%;width:13px;height:13px;font-size:7px;color:#fff;
+  cursor:pointer;display:flex;align-items:center;justify-content:center}
+.irow{display:flex;gap:5px;align-items:flex-end}
+.ic{width:37px;height:37px;border-radius:8px;border:1px solid;background:transparent;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0}
+.ic.mic{border-color:var(--b2);color:var(--sub)}
+.ic.mic:hover{border-color:rgba(56,189,248,.4);color:var(--blue)}
+.ic.mic.rec{border-color:var(--red);color:var(--red);animation:blink 1s infinite}
+.ic.att{border-color:var(--b2);color:var(--sub)}
+.ic.att:hover{border-color:rgba(56,189,248,.4);color:var(--blue);background:rgba(56,189,248,.06)}
+.ic.snd{border-color:rgba(52,211,153,.3);color:var(--green)}
+.ic.snd:hover{background:rgba(52,211,153,.08);border-color:var(--green)}
+#fim{display:none}
+.ta{flex:1;background:var(--s1);border:1px solid var(--b2);border-radius:10px;
+  padding:9px 12px;color:var(--txt);font-family:var(--F);font-size:13px;
+  resize:none;outline:none;min-height:39px;max-height:110px;
+  transition:border-color .2s;scrollbar-width:thin}
+.ta:focus{border-color:rgba(56,189,248,.4)}
+.ta::placeholder{color:var(--dim)}
+
+/* ─ MODAL ─ */
+.mbg{display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center}
+.mbg.open{display:flex}
+.mdl{background:var(--s1);border:1px solid var(--b2);border-radius:13px;
+  padding:22px;width:430px;max-width:95vw;
+  box-shadow:0 24px 80px rgba(0,0,0,.6);animation:mi .2s ease}
+@keyframes mi{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+.mt{font-size:14px;font-weight:700;margin-bottom:3px}
+.ms{font-size:11px;color:var(--sub);margin-bottom:14px;line-height:1.6}
+.tip{background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.14);
+  border-radius:7px;padding:9px 11px;font-size:11px;color:var(--sub);
+  line-height:1.7;margin-bottom:13px}
+.tip b{color:var(--blue)}.tip a{color:var(--green);text-decoration:none}
+.tip a:hover{text-decoration:underline}
+.fl{margin-bottom:12px}
+.fl label{display:block;font-size:10px;font-weight:600;color:var(--sub);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.fl input,.fl select{width:100%;background:var(--s2);border:1px solid var(--b2);
+  border-radius:7px;padding:8px 11px;color:var(--txt);
+  font-family:var(--M);font-size:12px;outline:none;transition:border-color .2s}
+.fl input:focus,.fl select:focus{border-color:rgba(56,189,248,.5)}
+.fl .hint{font-size:9px;color:var(--dim);margin-top:4px;line-height:1.5}
+.mbtns{display:flex;gap:7px;margin-top:16px}
+.mb{flex:1;padding:9px;border-radius:7px;border:1px solid;
+  font-family:var(--F);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s}
+.mb.ok{background:linear-gradient(135deg,var(--blue),var(--violet));
+  border-color:transparent;color:#fff}
+.mb.ok:hover{box-shadow:0 4px 14px rgba(56,189,248,.3)}
+.mb.no{background:transparent;border-color:var(--b2);color:var(--sub)}
+.mb.no:hover{color:var(--txt)}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="bar">
+  <div class="logo">
+    <div class="logo-sq">🌉</div>
+    <div>
+      <div class="logo-n">AEGISBRIDGE</div>
+      <div class="logo-s">AI Bridge Health Monitor · Final Year Project</div>
+    </div>
+  </div>
+  <div class="bar-mid">
+    <div class="alive"><span class="dot"></span><span id="stxt">VISION AI ONLINE</span></div>
+  </div>
+  <div class="bar-r">
+    <div class="clk" id="clk">--:--:--</div>
+    <button class="keybtn" onclick="openModal()">⚙️ API Setup</button>
+  </div>
+</header>
+
+<!-- API SETUP MODAL -->
+<div class="mbg" id="mbg">
+  <div class="mdl">
+    <div class="mt">⚙️ OpenRouter API Setup</div>
+    <div class="ms">Your API key is already saved. You can change it here anytime.</div>
+    <div class="tip">
+      <b>Get / manage your key:</b> <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a><br>
+      The key starts with <b>sk-or-v1-...</b><br>
+      All models marked <b>FREE</b> cost nothing to use.
+    </div>
+    <div class="fl">
+      <label>OpenRouter API Key</label>
+      <input type="password" id="kIn" placeholder="sk-or-v1-••••••••••••••••••••••••••••••"/>
+      <div class="hint">Key is saved in your browser only. It calls OpenRouter directly — nothing goes to any other server.</div>
+    </div>
+    <div class="fl">
+      <label>Vision Model</label>
+      <select id="mIn">
+        <option value="google/gemini-2.0-flash-001">✅ google/gemini-2.0-flash-001 (FREE · Best)</option>
+        <option value="google/gemini-flash-1.5-8b">✅ google/gemini-flash-1.5-8b (FREE · Fast)</option>
+        <option value="meta-llama/llama-3.2-11b-vision-instruct:free">✅ meta-llama/llama-3.2-11b-vision (FREE)</option>
+        <option value="qwen/qwen2.5-vl-7b-instruct:free">✅ qwen/qwen2.5-vl-7b-instruct (FREE)</option>
+        <option value="google/gemini-2.5-flash-preview">google/gemini-2.5-flash-preview (Paid)</option>
+        <option value="anthropic/claude-3.5-sonnet">anthropic/claude-3.5-sonnet (Paid)</option>
+        <option value="openai/gpt-4o">openai/gpt-4o (Paid)</option>
+      </select>
+      <div class="hint">If one model fails, try another. All FREE ones support images.</div>
+    </div>
+    <div class="mbtns">
+      <button class="mb no" onclick="closeModal()">Cancel</button>
+      <button class="mb ok" onclick="saveSettings()">💾 Save &amp; Activate</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP LAYOUT -->
+<div class="wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="side">
+
+    <div class="sec">
+      <div class="sec-t">Bulk Image Report</div>
+      <div class="drp" id="dz" onclick="document.getElementById('bIn').click()">
+        <input type="file" id="bIn" multiple accept="image/*" onchange="addBulk(this.files)"/>
+        <div class="drp-i">📁</div>
+        <div class="drp-t"><b>Drop images here</b><br>for full structural report</div>
+        <div class="drp-h">JPG · PNG · WEBP · multi-select OK</div>
+      </div>
+      <div class="thumbs" id="ths"></div>
+      <div class="prg" id="prg">
+        <div class="prg-l" id="prgl">Analyzing...</div>
+        <div class="prg-b"><div class="prg-f" id="prgf"></div></div>
+      </div>
+      <button class="runbtn" id="runBtn" disabled onclick="runBulk()">
+        🔍 Analyze &amp; Generate Report
+      </button>
+    </div>
+
+    <div class="sec">
+      <div class="sec-t">Structural Health</div>
+      <div class="rw">
+        <svg class="rsvg" viewBox="0 0 110 110">
+          <circle cx="55" cy="55" r="44" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="7"/>
+          <circle id="arc" cx="55" cy="55" r="44" fill="none" stroke="var(--green)" stroke-width="7"
+            stroke-linecap="round" stroke-dasharray="276.46" stroke-dashoffset="276.46"
+            transform="rotate(-90 55 55)" style="transition:all 1.2s cubic-bezier(.4,0,.2,1)"/>
+          <text x="55" y="50" text-anchor="middle" fill="var(--txt)"
+            font-family="'Bebas Neue',cursive" font-size="26" id="sco">--</text>
+          <text x="55" y="63" text-anchor="middle" fill="#475569"
+            font-family="'JetBrains Mono',monospace" font-size="8">/ 100</text>
+        </svg>
+        <div class="rl" id="rl">AWAITING SCAN</div>
+        <div class="rbdg" id="bdg">UNKNOWN</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-t">Damage Metrics</div>
+      <div class="mg">
+        <div class="mc"><div class="mc-n">Severity</div><div class="mc-v" id="mS" style="color:var(--dim)">—</div><div class="mc-s" id="mSs">pending</div></div>
+        <div class="mc"><div class="mc-n">Confidence</div><div class="mc-v" id="mC" style="color:var(--dim)">—</div><div class="mb"><div class="mb-f" id="mCb" style="width:0%"></div></div></div>
+        <div class="mc"><div class="mc-n">Images</div><div class="mc-v" id="mI" style="color:var(--blue)">0</div><div class="mc-s">scanned</div></div>
+        <div class="mc"><div class="mc-n">Risk</div><div class="mc-v" id="mR" style="color:var(--dim)">—</div><div class="mc-s" id="mRs">—</div></div>
+      </div>
+    </div>
+
+    <div class="sec" style="flex:1">
+      <div class="sec-t">Alert</div>
+      <div class="al info" id="alc">
+        <div class="al-i">ℹ️</div>
+        <div id="alt">Upload images in sidebar for full report, or 📎 attach images in chat for quick inspection.</div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- CHAT -->
+  <div class="main">
+
+    <div class="chd">
+      <div class="ch-i">🤖</div>
+      <div>
+        <div class="ch-n">AEGIS — AI Bridge Inspector</div>
+        <div class="ch-s" id="csub">OpenRouter Vision AI · Send images or ask anything</div>
+      </div>
+      <div class="recb" id="recb"><div class="rd"></div>REC</div>
+    </div>
+
+    <div class="qbar">
+      <button class="qb" onclick="q('What types of bridge cracks are most dangerous?')">🔍 Crack types</button>
+      <button class="qb" onclick="q('Step by step guide to repair concrete bridge cracks')">🔧 Repair guide</button>
+      <button class="qb" onclick="q('Explain IRC SP 35 bridge inspection standards India')">📋 IRC standards</button>
+      <button class="qb" onclick="q('Emergency action plan for critically damaged bridge')">🚨 Emergency plan</button>
+      <button class="qb" onclick="q('RDSO railway bridge inspection codes B-series')">🚂 Railway codes</button>
+      <button class="qb" onclick="q('What causes bridge corrosion and how to prevent it?')">🔩 Corrosion</button>
+      <button class="qb" onclick="q('IoT sensors used in smart bridge health monitoring')">📡 IoT sensors</button>
+      <button class="qb" onclick="q('Epoxy injection crack repair technique for bridges')">💉 Epoxy repair</button>
+      <button class="qb" onclick="q('Carbon fiber CFRP reinforcement for bridge repair')">⚡ CFRP</button>
+      <button class="qb" onclick="q('Estimated cost of bridge rehabilitation in India')">💰 Repair costs</button>
+    </div>
+
+    <div class="msgs" id="msgs">
+      <div class="wel" id="wel">
+        <div class="wi">🌉</div>
+        <div class="wt">AEGIS IS ONLINE</div>
+        <div class="ws">
+          Your AI bridge inspector powered by <b>OpenRouter Vision AI</b>.<br>
+          Send me a bridge photo — I'll analyze cracks, corrosion, damage and suggest repairs.<br>
+          Or just ask me anything. I'm here to help!
+        </div>
+        <div class="wst">
+          <div class="wsi"><div class="wsn">1</div>Click <b>API Setup</b> to confirm key</div>
+          <div class="wsi"><div class="wsn">2</div>📎 Attach image → send</div>
+          <div class="wsi"><div class="wsn">3</div>Get instant analysis</div>
+          <div class="wsi"><div class="wsn">4</div>Ask follow-ups freely</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inp">
+      <div class="vrow">
+        <span class="vl">VOICE:</span>
+        <select class="vs" id="vs" onchange="sv=parseInt(this.value)"></select>
+        <span class="vl">RATE</span>
+        <input type="range" min="0.5" max="2" step="0.1" value="1" oninput="sr=parseFloat(this.value)"/>
+        <span class="vl">PITCH</span>
+        <input type="range" min="0.5" max="2" step="0.1" value="1" oninput="sp=parseFloat(this.value)"/>
+      </div>
+      <div class="imgs" id="imgs"></div>
+      <div class="irow">
+        <button class="ic mic" id="micBtn" onclick="toggleMic()" title="Voice input">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="2" width="6" height="11" rx="3"/>
+            <path d="M19 11a7 7 0 0 1-14 0M12 18v4M8 22h8"/>
+          </svg>
+        </button>
+        <button class="ic att" onclick="document.getElementById('fim').click()" title="Attach image">
+          <input type="file" id="fim" accept="image/*" multiple onchange="attach(this.files)"/>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </button>
+        <textarea class="ta" id="ta" rows="1"
+          placeholder="📎 Attach a bridge image and ask about it — or just talk to me about anything bridge-related..."
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"
+          oninput="grow(this)"></textarea>
+        <button class="ic snd" onclick="send()" title="Send">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /wrap -->
+
+<script>
+'use strict';
+
+// ════════════════════════════════════════════════
+//  CONFIG  — your key is pre-saved here
+//  User can change via ⚙️ API Setup anytime
+// ════════════════════════════════════════════════
+const FALLBACK_KEY   = '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';
+const FALLBACK_MODEL = 'google/gemini-2.0-flash-001';
+const OR_ENDPOINT    = 'https://openrouter.ai/api/v1/chat/completions';
+
+// Load from localStorage (user's saved choice) OR use fallback
+let KEY   = localStorage.getItem('or_key')   || FALLBACK_KEY;
+let MODEL = localStorage.getItem('or_model') || FALLBACK_MODEL;
+
+// ════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════
+let sv=0, sr=1, sp=1;
+let voices=[], rec=null, isRec=false;
+let bulkFiles=[];       // sidebar images
+let pendingImgs=[];     // images attached in chat input
+let history=[];         // conversation turns  [{role,content}]
+let lastMeta=null;      // last parsed analysis metadata
+
+// ════════════════════════════════════════════════
+//  CLOCK
+// ════════════════════════════════════════════════
+setInterval(()=>{
+  document.getElementById('clk').textContent =
+    new Date().toLocaleTimeString('en-IN',{hour12:false}) + ' IST';
+}, 1000);
+
+// ════════════════════════════════════════════════
+//  MODAL
+// ════════════════════════════════════════════════
+function openModal(){
+  document.getElementById('kIn').value = KEY;
+  document.getElementById('mIn').value = MODEL;
+  document.getElementById('mbg').classList.add('open');
+}
+function closeModal(){ document.getElementById('mbg').classList.remove('open'); }
+
+function saveSettings(){
+  const k = document.getElementById('kIn').value.trim();
+  const m = document.getElementById('mIn').value;
+  if(!k){ alert('Please enter your API key.'); return; }
+  KEY = k; MODEL = m;
+  localStorage.setItem('or_key',   KEY);
+  localStorage.setItem('or_model', MODEL);
+  closeModal();
+  refreshRunBtn();
+  document.getElementById('stxt').textContent = MODEL.split('/').pop().toUpperCase() + ' READY';
+  hideWel();
+  bot('✅ Settings saved!\n\nNow running **' + MODEL + '**.\n\nSend me a bridge photo using the 📎 button and I will analyze every crack, corrosion, and structural issue I can see. Or ask me anything about bridge safety!');
+}
+
+// ════════════════════════════════════════════════
+//  FILE → DATA URL  (includes "data:image/jpeg;base64,...")
+// ════════════════════════════════════════════════
+function fileToDataURL(file){
+  return new Promise((ok, fail)=>{
+    const r = new FileReader();
+    r.onload  = () => ok(r.result);
+    r.onerror = fail;
+    r.readAsDataURL(file);
+  });
+}
+
+// ════════════════════════════════════════════════
+//  OPENROUTER API CALL
+//  Standard OpenAI-compatible format
+//  Images: {type:"image_url", image_url:{url:"data:image/jpeg;base64,..."}}
+// ════════════════════════════════════════════════
+async function callOR(messages, attempt=0){
+  const res = await fetch(OR_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + KEY,
+      'Content-Type':  'application/json',
+      'HTTP-Referer':  'http://localhost:5000',
+      'X-Title':       'AegisBridge'
+    },
+    body: JSON.stringify({
+      model:       MODEL,
+      messages:    messages,
+      max_tokens:  2048,
+      temperature: 0.4
+    })
+  });
+
+  // Parse response
+  const data = await res.json().catch(()=>null);
+
+  if(!res.ok){
+    const code = data?.error?.code || res.status;
+    const msg  = data?.error?.message || 'HTTP ' + res.status;
+
+    // Rate limit → retry once after delay
+    if((code===429 || res.status===429) && attempt < 2){
+      await delay(3000);
+      return callOR(messages, attempt+1);
+    }
+    if(res.status===401) throw new Error('BAD_KEY');
+    if(res.status===402) throw new Error('NO_CREDITS');
+    if(res.status===404) throw new Error('BAD_MODEL:' + MODEL);
+    throw new Error('API_' + res.status + ': ' + msg.slice(0,120));
+  }
+
+  const text = data?.choices?.[0]?.message?.content;
+  if(!text) throw new Error('Empty response from model. Try again.');
+  return text;
+}
+
+const delay = ms => new Promise(r => setTimeout(r, ms));
+
+// ════════════════════════════════════════════════
+//  SYSTEM PROMPT
+// ════════════════════════════════════════════════
+function systemPrompt(){
+  return `You are AEGIS, a friendly and expert AI bridge structural inspector, built for the AegisBridge final-year civil engineering project.
+
+EXPERTISE:
+- Bridge damage: cracks (hairline <0.1mm, fine 0.1-0.3mm, medium 0.3-1mm, wide >1mm), corrosion, spalling, rebar exposure, deformation, honeycombing
+- Crack patterns: longitudinal, transverse, diagonal, map/alligator cracking  
+- Indian codes: IRC:6, IRC:21, IRC:SP:35, IS:456, IS:1893, IS:3370, IS:800
+- Railway: RDSO B-series codes, IRS Bridge Rules
+- Repair: epoxy injection, polyurethane sealants, CFRP reinforcement, shotcrete, cathodic protection, waterproofing
+- Health scoring: GOOD 80-100, FAIR 60-79, POOR 40-59, CRITICAL 0-39
+- IoT monitoring: strain gauges, LVDT, accelerometers, fiber optic sensors, BIM
+
+WHEN YOU SEE AN IMAGE:
+Describe every visible detail: crack locations, patterns, approximate widths, colors, corrosion stains, spalling areas, exposed rebar. Then give:
+- Damage Severity: NONE / MINOR / MODERATE / SEVERE / CRITICAL
+- Health Score: [number 0-100]
+- Root cause explanation
+- Remediation plan: Immediate → Short-term (30 days) → Long-term
+- Relevant Indian standards (IRC/IS codes)
+
+WHEN ANSWERING QUESTIONS:
+- Be conversational, warm, clear
+- Use **bold** for key terms, bullet points for lists
+- Reference previous analysis if asked about results
+- Be encouraging — this is a student project
+
+Context: ${lastMeta ? 'Last analysis: Severity='+lastMeta.sev+', Health='+lastMeta.h+'/100, Risk='+lastMeta.r : 'No analysis yet.'}`;
+}
+
+// ════════════════════════════════════════════════
+//  ATTACH IMAGES (chat input)
+// ════════════════════════════════════════════════
+async function attach(files){
+  for(const f of Array.from(files)){
+    const du = await fileToDataURL(f);
+    pendingImgs.push({ f, du });
+  }
+  renderPreviews();
+  document.getElementById('fim').value = '';
+}
+
+function renderPreviews(){
+  const box = document.getElementById('imgs');
+  box.innerHTML = '';
+  pendingImgs.forEach((img, i)=>{
+    const d = document.createElement('div');
+    d.className = 'ip';
+    d.innerHTML = `<img src="${img.du}"/><button class="xp" onclick="rmPending(${i})">✕</button>`;
+    box.appendChild(d);
+  });
+}
+function rmPending(i){ pendingImgs.splice(i,1); renderPreviews(); }
+
+// ════════════════════════════════════════════════
+//  SEND CHAT MESSAGE
+// ════════════════════════════════════════════════
+async function send(){
+  const taEl   = document.getElementById('ta');
+  const text   = taEl.value.trim();
+  const imgs   = [...pendingImgs];
+
+  if(!text && !imgs.length) return;
+
+  // Reset input
+  taEl.value = ''; grow(taEl);
+  pendingImgs = []; renderPreviews();
+  hideWel();
+
+  // Show user bubble (with image thumbnails + text)
+  userBubble(text, imgs);
+
+  if(!KEY){
+    bot('I need an API key! Click **API Setup** (top right) — your key is already pre-filled. Just click **Save & Activate**.');
+    return;
+  }
+
+  const tid = typing();
+  document.getElementById('csub').textContent = 'Thinking...';
+
+  try{
+    // Build content array for this message
+    // OpenAI vision format: [{type:"image_url",...}, {type:"text",...}]
+    const content = [];
+
+    for(const img of imgs){
+      content.push({
+        type: 'image_url',
+        image_url: { url: img.du }  // data URL with base64
+      });
+    }
+
+    if(text){
+      content.push({ type:'text', text });
+    } else if(imgs.length){
+      // No text but images sent → auto-prompt
+      content.push({ type:'text', text:
+        'Analyze this bridge image. Tell me:\n'+
+        '1. All visible damage (exact location, crack type, pattern, approximate width)\n'+
+        '2. Severity level (NONE/MINOR/MODERATE/SEVERE/CRITICAL)\n'+
+        '3. Health score (0-100)\n'+
+        '4. Root cause\n'+
+        '5. Remediation plan (immediate, 30-day, long-term)\n'+
+        '6. Applicable Indian IRC/IS standards'
+      });
+    }
+
+    // Full messages for this call: system + history + new message
+    const messages = [
+      { role: 'system',  content: systemPrompt() },
+      ...history,
+      { role: 'user',    content }
+    ];
+
+    const reply = await callOR(messages);
+
+    // Save this exchange to history (plain text for history, not images — to keep it short)
+    history.push({ role:'user',      content: text || '[bridge image]' });
+    history.push({ role:'assistant', content: reply });
+    // Keep last 30 turns
+    if(history.length > 60) history = history.slice(-60);
+
+    removeTyping(tid);
+    bot(reply);
+
+    // Update sidebar if image(s) sent
+    if(imgs.length){
+      const meta = parseMeta(reply);
+      meta.imgCount = imgs.length;
+      updateSidebar(meta);
+      lastMeta = meta;
+      document.getElementById('mI').textContent = imgs.length;
+    }
+
+  } catch(err){
+    removeTyping(tid);
+    handleErr(err);
+  }
+
+  document.getElementById('csub').textContent = 'OpenRouter Vision AI · Send images or ask anything';
+}
+
+// Quick prompt buttons
+function q(text){ document.getElementById('ta').value = text; send(); }
+
+// ════════════════════════════════════════════════
+//  BULK SIDEBAR ANALYSIS
+// ════════════════════════════════════════════════
+function addBulk(files){
+  Array.from(files).forEach(f =>{
+    if(!bulkFiles.find(x => x.name === f.name)) bulkFiles.push(f);
+  });
+  renderThumbs();
+  document.getElementById('bIn').value = '';
+}
+function renderThumbs(){
+  const c = document.getElementById('ths'); c.innerHTML='';
+  bulkFiles.forEach((f,i)=>{
+    const url = URL.createObjectURL(f);
+    const d   = document.createElement('div'); d.className='th';
+    d.innerHTML=`<img src="${url}"/><button class="xx" onclick="delBulk(${i});event.stopPropagation()">✕</button>`;
+    c.appendChild(d);
+  });
+  refreshRunBtn();
+}
+function delBulk(i){ bulkFiles.splice(i,1); renderThumbs(); }
+function refreshRunBtn(){ document.getElementById('runBtn').disabled = bulkFiles.length===0 || !KEY; }
+
+// Drag & drop
+const dz = document.getElementById('dz');
+dz.addEventListener('dragover', e =>{ e.preventDefault(); dz.classList.add('on'); });
+dz.addEventListener('dragleave', ()=> dz.classList.remove('on'));
+dz.addEventListener('drop', e =>{ e.preventDefault(); dz.classList.remove('on'); addBulk(e.dataTransfer.files); });
+
+async function runBulk(){
+  if(!bulkFiles.length || !KEY) return;
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true; btn.textContent = '⏳ Analyzing...';
+  hideWel();
+
+  const n = bulkFiles.length;
+  userBubble('Running full structural report on '+n+' bridge image'+(n>1?'s':'')+'...', []);
+  const tid = typing();
+  setProg('Preparing images...', 5);
+
+  try{
+    // Build content with all images
+    const content = [];
+    for(let i=0; i<n; i++){
+      setProg('Reading image '+(i+1)+'/'+n, 5 + Math.round(i/n*50));
+      const du = await fileToDataURL(bulkFiles[i]);
+      content.push({ type:'image_url', image_url:{ url: du } });
+      content.push({ type:'text', text:'(Image '+(i+1)+': '+bulkFiles[i].name+')' });
+    }
+
+    content.push({ type:'text', text:
+      'Analyze ALL '+n+' bridge image(s) above. Give a COMPLETE structural health report.\n\n'+
+      '## VISUAL OBSERVATIONS\n'+
+      'For each image: describe all structural elements visible, every damage (cracks with location/pattern/estimated width), corrosion, spalling, exposed rebar, deformation.\n\n'+
+      '## DAMAGE CLASSIFICATION\n'+
+      '- Crack Types: hairline/fine/medium/wide/none\n'+
+      '- Crack Pattern: longitudinal/transverse/diagonal/map/none\n'+
+      '- Corrosion: none/minor/moderate/severe\n'+
+      '- Spalling: none/minor/moderate/severe\n'+
+      '- Exposed Rebar: yes/no\n'+
+      '- Deformation: none/visible\n\n'+
+      '## OVERALL ASSESSMENT\n'+
+      '- Condition: GOOD / FAIR / POOR / CRITICAL\n'+
+      '- Damage Severity: NONE / MINOR / MODERATE / SEVERE\n'+
+      '- Health Score: [0-100]\n'+
+      '- Risk Level: LOW / ELEVATED / CRITICAL\n'+
+      '- Primary Concerns: [list]\n\n'+
+      '## REMEDIATION PLAN\n'+
+      '### Immediate Actions (0-48 hrs if needed)\n'+
+      '### Short-term (within 30 days)\n'+
+      '### Long-term Rehabilitation\n\n'+
+      '## APPLICABLE INDIAN STANDARDS\n'+
+      'List relevant IRC/IS/RDSO codes for the damage found.\n\n'+
+      'Only describe what you can actually see in the images.'
+    });
+
+    setProg('AI Vision analyzing...', 62);
+
+    const messages = [
+      { role:'system', content: systemPrompt() },
+      { role:'user',   content }
+    ];
+    const result = await callOR(messages);
+
+    setProg('Complete!', 100);
+
+    // Add summary to history
+    history.push({ role:'user',      content: '['+n+' bridge images analyzed via bulk report]' });
+    history.push({ role:'assistant', content: result });
+
+    const meta = parseMeta(result);
+    meta.imgCount = n;
+    lastMeta = meta;
+    updateSidebar(meta);
+
+    removeTyping(tid); hideProg();
+
+    // Render report card
+    const sc = meta.sev==='SEVERE'?'cr':meta.sev==='MODERATE'?'cy':'cg';
+    const rc = meta.r==='CRITICAL'?'cr':meta.r==='ELEVATED'?'cy':'cg';
+    const html =
+      '<div class="rh">🔬 AEGIS STRUCTURAL REPORT — OPENROUTER VISION AI</div>'+
+      '<div class="cr-r">'+
+        '<span class="chip '+sc+'">'+meta.sev+'</span>'+
+        '<span class="chip '+rc+'">'+meta.r+' RISK</span>'+
+        '<span class="chip cb">HEALTH '+meta.h+'/100</span>'+
+        '<span class="chip cb">'+n+' IMAGE'+(n>1?'S':'')+' SCANNED</span>'+
+      '</div>'+
+      '<div style="font-size:12px;line-height:1.82;color:var(--sub);margin-top:8px">'+
+        fmtReport(result)+
+      '</div>'+
+      '<div style="margin-top:10px;padding:9px 10px;'+
+        'background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.14);'+
+        'border-radius:7px;font-size:11px;color:var(--sub)">'+
+        '💬 <b style="color:var(--blue)">Ask me anything</b> about these results — repair steps, costs, who to call, specific cracks, or anything else.'+
+      '</div>';
+    rawBubble(html);
+
+    speak('Analysis complete. Bridge health score '+meta.h+' out of 100. Severity '+meta.sev+'. '+
+      (meta.r==='CRITICAL'?'Emergency action required immediately.':
+       meta.r==='ELEVATED'?'Urgent inspection within 7 days.':'Routine maintenance recommended.'));
+
+  } catch(err){
+    removeTyping(tid); hideProg();
+    handleErr(err);
+  }
+
+  btn.disabled = bulkFiles.length===0 || !KEY;
+  btn.textContent = '🔍 Analyze & Generate Report';
+}
+
+// ════════════════════════════════════════════════
+//  ERROR MESSAGES
+// ════════════════════════════════════════════════
+function handleErr(err){
+  const m = err.message || '';
+  if(m === 'BAD_KEY'){
+    bot('❌ **Invalid API key.**\n\nClick **API Setup** and re-enter your key.\nMake sure it starts with **sk-or-v1-...**\nGet a key at: openrouter.ai/keys');
+  } else if(m === 'NO_CREDITS'){
+    bot('❌ **No credits / quota exceeded.**\n\nEither:\n- Use a FREE model in **API Setup** (e.g. google/gemini-2.0-flash-001)\n- Or add credits at openrouter.ai/credits');
+  } else if(m.startsWith('BAD_MODEL')){
+    bot('❌ **Model not found:** `'+MODEL+'`\n\nClick **API Setup** and select a different model.\nTry: **google/gemini-2.0-flash-001** (free & works great)');
+  } else if(m.includes('429') || m.includes('RATE')){
+    bot('⚠️ **Rate limit hit.** The model is busy.\n\nWait 30-60 seconds and try again.\nOr switch to a different free model in **API Setup**.');
+  } else if(m.includes('Failed to fetch') || m.includes('Load failed') || m.includes('NetworkError')){
+    bot('❌ **Cannot connect to OpenRouter.**\n\nMake sure:\n- **run.bat** CMD window is still open\n- You are at **http://localhost:5000** (not file://)\n- Your internet is working');
+  } else {
+    bot('❌ Error: '+m+'\n\nTry:\n1. Open **API Setup** → choose **google/gemini-2.0-flash-001**\n2. Make sure run.bat window is open\n3. Wait 30 seconds and retry');
+  }
+}
+
+// ════════════════════════════════════════════════
+//  PARSE METADATA FROM REPLY
+// ════════════════════════════════════════════════
+function parseMeta(txt){
+  const t = txt.toLowerCase();
+  let sev='MINOR', h=72, r='LOW', conf=88, color='var(--green)', imgCount=0;
+
+  // Health score
+  const hm = txt.match(/health\s*score[:\s]*(\d+)/i);
+  if(hm) h = parseInt(hm[1]);
+
+  // Severity
+  if(/severity:\s*(severe|critical)/i.test(txt) || /condition:\s*critical/i.test(txt)){
+    sev='SEVERE'; r='CRITICAL'; color='var(--red)'; if(!hm) h=28;
+  } else if(/severity:\s*moderate/i.test(txt) || /condition:\s*poor/i.test(txt)){
+    sev='MODERATE'; r='ELEVATED'; color='var(--amber)'; if(!hm) h=55;
+  } else if(/condition:\s*good/i.test(txt) || /severity:\s*none/i.test(txt)){
+    sev='GOOD'; r='LOW'; color='var(--green)'; if(!hm) h=88;
+  } else {
+    // keyword fallback
+    const hi = ['wide crack','collapse','failure','severe corrosion','critical'].filter(k=>t.includes(k)).length;
+    const mi = ['crack','damage','corrosion','spalling','deteriorat','rust'].filter(k=>t.includes(k)).length;
+    if(hi >= 2){ sev='SEVERE'; r='CRITICAL'; color='var(--red)'; if(!hm) h=28; }
+    else if(mi >= 3){ sev='MODERATE'; r='ELEVATED'; color='var(--amber)'; if(!hm) h=55; }
+  }
+
+  h = Math.max(5, Math.min(100, h));
+  return { sev, h, r, conf, color, imgCount };
+}
+
+// ════════════════════════════════════════════════
+//  FORMAT REPORT TEXT → HTML
+// ════════════════════════════════════════════════
+function fmtReport(txt){
+  return txt
+    .replace(/^## (.+)$/gm, '<span class="sh">$1</span>')
+    .replace(/^### (.+)$/gm, '<b style="color:var(--green)">$1</b><br>')
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+    .replace(/\*(.+?)\*/g,   '<i>$1</i>')
+    .replace(/^[-•] (.+)$/gm,'<span style="display:block;margin-left:10px;color:var(--sub)">• $1</span>')
+    .replace(/\n/g, '<br>');
+}
+
+// ════════════════════════════════════════════════
+//  SIDEBAR UPDATE
+// ════════════════════════════════════════════════
+function updateSidebar(m){
+  const C=276.46, off=C-(C*m.h/100);
+  document.getElementById('arc').style.strokeDashoffset = off;
+  document.getElementById('arc').style.stroke           = m.color;
+  document.getElementById('sco').textContent = m.h;
+  document.getElementById('rl').textContent  = 'HEALTH '+m.h+'%';
+
+  const cl = {SEVERE:'var(--red)',MODERATE:'var(--amber)',MINOR:'var(--green)',GOOD:'var(--green)'};
+  const bdg = document.getElementById('bdg');
+  bdg.textContent        = m.sev;
+  bdg.style.borderColor  = cl[m.sev]||'var(--dim)';
+  bdg.style.color        = cl[m.sev]||'var(--dim)';
+
+  document.getElementById('mS').textContent  = m.sev;
+  document.getElementById('mS').style.color  = cl[m.sev]||'var(--dim)';
+  document.getElementById('mSs').textContent = m.sev==='SEVERE'?'critical':m.sev==='MODERATE'?'moderate':'minor/none';
+  document.getElementById('mC').textContent  = m.conf+'%';
+  document.getElementById('mC').style.color  = m.color;
+  document.getElementById('mCb').style.width      = m.conf+'%';
+  document.getElementById('mCb').style.background = m.color;
+  if(m.imgCount) document.getElementById('mI').textContent = m.imgCount;
+  document.getElementById('mR').textContent  = m.r;
+  document.getElementById('mR').style.color  = cl[m.sev]||'var(--dim)';
+  document.getElementById('mRs').textContent = m.r==='CRITICAL'?'act NOW':m.r==='ELEVATED'?'urgent':'routine';
+
+  const am = {
+    SEVERE: {c:'danger', i:'🚨', t:'CRITICAL: Immediate risk. Emergency inspection required NOW. Stop all traffic.'},
+    MODERATE:{c:'warn',  i:'⚡', t:'WARNING: Moderate damage. Get engineering inspection within 7 days.'},
+    MINOR:  {c:'safe',  i:'✅', t:'SAFE: Minor wear. Bridge operational. Routine maintenance within 30 days.'},
+    GOOD:   {c:'safe',  i:'✅', t:'GOOD: No significant damage found. Continue periodic inspections.'}
+  };
+  const a = am[m.sev] || am.MINOR;
+  document.getElementById('alc').className = 'al '+a.c;
+  document.getElementById('alc').querySelector('.al-i').textContent = a.i;
+  document.getElementById('alt').textContent = a.t;
+}
+
+function setProg(l,p){ document.getElementById('prg').style.display='block'; document.getElementById('prgl').textContent=l; document.getElementById('prgf').style.width=p+'%'; }
+function hideProg(){ document.getElementById('prg').style.display='none'; }
+
+// ════════════════════════════════════════════════
+//  CHAT UI HELPERS
+// ════════════════════════════════════════════════
+function hideWel(){ const w=document.getElementById('wel'); if(w) w.remove(); }
+
+function userBubble(text, imgs){
+  hideWel();
+  const box = document.getElementById('msgs');
+  const d   = document.createElement('div'); d.className='msg u';
+  let inner = '';
+  imgs.forEach(img => { inner += `<img class="bub-img" src="${img.du}"/>`; });
+  if(text) inner += esc(text);
+  d.innerHTML = `<div class="av">👤</div><div class="bub">${inner}</div>`;
+  box.appendChild(d); box.scrollTop = box.scrollHeight;
+}
+
+function bot(text){
+  hideWel();
+  const html = text
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+    .replace(/\*(.+?)\*/g,    '<i>$1</i>')
+    .replace(/^[-•] (.+)$/gm, '<span style="display:block;margin-left:10px;color:var(--sub)">• $1</span>')
+    .replace(/\n/g, '<br>');
+  rawBubble(html);
+  speak(text.replace(/[*_#`]/g,'').replace(/<[^>]+>/g,'').slice(0,280));
+}
+
+function rawBubble(html){
+  hideWel();
+  const box = document.getElementById('msgs');
+  const d   = document.createElement('div'); d.className='msg a';
+  d.innerHTML = `<div class="av">🤖</div><div class="bub">${html}</div>`;
+  box.appendChild(d); box.scrollTop = box.scrollHeight;
+}
+
+function typing(){
+  hideWel();
+  const box = document.getElementById('msgs');
+  const id  = 'ty'+Date.now();
+  const d   = document.createElement('div'); d.className='msg a'; d.id=id;
+  d.innerHTML='<div class="av">🤖</div><div class="bub"><div class="dots"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>';
+  box.appendChild(d); box.scrollTop=box.scrollHeight;
+  return id;
+}
+function removeTyping(id){ const e=document.getElementById(id); if(e) e.remove(); }
+function esc(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+
+// ════════════════════════════════════════════════
+//  VOICE OUTPUT
+// ════════════════════════════════════════════════
+function loadVoices(){
+  voices = window.speechSynthesis.getVoices();
+  const sel = document.getElementById('vs'); sel.innerHTML='';
+  voices.forEach((v,i)=>{
+    const o = document.createElement('option'); o.value=i;
+    const n = v.name.length>18 ? v.name.slice(0,18)+'…' : v.name;
+    o.textContent = n+' ['+v.lang+']';
+    if(i===sv) o.selected=true;
+    sel.appendChild(o);
+  });
+}
+window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices();
+function speak(t){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t);
+  if(voices[sv]) u.voice = voices[sv];
+  u.rate=sr; u.pitch=sp;
+  window.speechSynthesis.speak(u);
+}
+
+// ════════════════════════════════════════════════
+//  VOICE INPUT (MIC)
+// ════════════════════════════════════════════════
+function toggleMic(){
+  if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){
+    bot('⚠️ Voice input needs Chrome or Edge browser.'); return;
+  }
+  if(isRec){ rec && rec.stop(); return; }
+  rec = new (window.SpeechRecognition||window.webkitSpeechRecognition)();
+  rec.lang='en-IN'; rec.continuous=false; rec.interimResults=true;
+  rec.onstart = ()=>{
+    isRec=true;
+    document.getElementById('micBtn').classList.add('rec');
+    document.getElementById('recb').classList.add('on');
+  };
+  rec.onresult = e =>{
+    document.getElementById('ta').value =
+      Array.from(e.results).map(r=>r[0].transcript).join('');
+  };
+  rec.onend = ()=>{
+    isRec=false;
+    document.getElementById('micBtn').classList.remove('rec');
+    document.getElementById('recb').classList.remove('on');
+    if(document.getElementById('ta').value.trim()) send();
+  };
+  rec.start();
+}
+
+// ════════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════════
+function grow(el){
+  el.style.height='auto';
+  el.style.height=Math.min(el.scrollHeight,110)+'px';
+}
+
+// ════════════════════════════════════════════════
+//  BOOT
+// ════════════════════════════════════════════════
+window.addEventListener('load', ()=>{
+  document.getElementById('stxt').textContent =
+    MODEL.split('/').pop().toUpperCase() + ' READY';
+  refreshRunBtn();
+
+  setTimeout(()=>{
+    bot('👋 Hi! I\'m **AEGIS**, your AI bridge structural inspector!\n\n'+
+        'I\'m powered by **'+MODEL+'** via OpenRouter.\n\n'+
+        '**To inspect a bridge:**\n'+
+        '- Click the 📷 button (next to mic) → attach your bridge photo → press send\n'+
+        '- I will see the image and analyze every crack, corrosion, and damage\n\n'+
+        '**Or just talk to me:**\n'+
+        '- Ask about crack types, repair methods, IRC standards, costs — anything!\n'+
+        '- Use the quick buttons above for common questions\n\n'+
+        '*Your API key is already configured. Change it anytime via ⚙️ API Setup.*');
+  }, 300);
+});
+</script>
+</body>
+</html>
