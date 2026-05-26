@@ -26,7 +26,7 @@ body::before{
     linear-gradient(90deg,rgba(56,189,248,.02) 1px,transparent 1px) 0 0/42px 42px
 }
 
-/* ─ TOP BAR ─ */
+/* TOP BAR */
 .bar{position:relative;z-index:10;flex-shrink:0;height:52px;
   display:flex;align-items:center;padding:0 20px;gap:12px;
   background:rgba(7,9,15,.97);border-bottom:1px solid var(--b1);backdrop-filter:blur(16px)}
@@ -51,10 +51,10 @@ body::before{
   display:flex;align-items:center;gap:5px}
 .keybtn:hover{background:rgba(56,189,248,.18);border-color:rgba(56,189,248,.5)}
 
-/* ─ LAYOUT ─ */
+/* LAYOUT */
 .wrap{position:relative;z-index:1;flex:1;display:flex;overflow:hidden}
 
-/* ─ SIDEBAR ─ */
+/* SIDEBAR */
 .side{width:265px;flex-shrink:0;display:flex;flex-direction:column;
   border-right:1px solid var(--b1);background:rgba(7,9,15,.65);
   overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--dim) transparent}
@@ -121,7 +121,7 @@ body::before{
 .al.danger{background:rgba(248,113,113,.05);border-color:rgba(248,113,113,.22);color:var(--red)}
 .al-i{flex-shrink:0;font-size:13px}
 
-/* ─ CHAT ─ */
+/* CHAT */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .chd{flex-shrink:0;padding:10px 18px;border-bottom:1px solid var(--b1);
   background:rgba(7,9,15,.82);display:flex;align-items:center;gap:9px}
@@ -148,7 +148,6 @@ body::before{
 .msgs{flex:1;overflow-y:auto;padding:16px 18px;
   display:flex;flex-direction:column;gap:11px;
   scrollbar-width:thin;scrollbar-color:var(--dim) transparent}
-
 .msg{display:flex;gap:8px;max-width:88%;animation:pop .2s ease}
 @keyframes pop{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 .msg.u{flex-direction:row-reverse;align-self:flex-end}
@@ -176,7 +175,6 @@ body::before{
 .cr-r{display:flex;flex-wrap:wrap;gap:3px;margin:5px 0}
 .sh{color:var(--blue);font-size:10px;font-weight:600;letter-spacing:1px;
   text-transform:uppercase;margin:9px 0 3px;font-family:var(--M);display:block}
-
 .dots{display:flex;gap:4px;padding:3px 0}
 .td{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:td .9s infinite}
 .td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
@@ -198,7 +196,7 @@ body::before{
   font-size:9px;font-weight:700;color:var(--blue);
   display:flex;align-items:center;justify-content:center}
 
-/* ─ INPUT ─ */
+/* INPUT */
 .inp{flex-shrink:0;padding:8px 18px 12px;
   border-top:1px solid var(--b1);background:rgba(7,9,15,.94)}
 .vrow{display:flex;align-items:center;gap:6px;margin-bottom:7px;flex-wrap:wrap}
@@ -233,7 +231,7 @@ input[type=range]{width:44px;accent-color:var(--blue);cursor:pointer}
 .ta:focus{border-color:rgba(56,189,248,.4)}
 .ta::placeholder{color:var(--dim)}
 
-/* ─ MODAL ─ */
+/* MODAL */
 .mbg{display:none;position:fixed;inset:0;z-index:200;
   background:rgba(0,0,0,.85);backdrop-filter:blur(8px);
   align-items:center;justify-content:center}
@@ -258,13 +256,25 @@ input[type=range]{width:44px;accent-color:var(--blue);cursor:pointer}
 .fl input:focus,.fl select:focus{border-color:rgba(56,189,248,.5)}
 .fl .hint{font-size:9px;color:var(--dim);margin-top:4px;line-height:1.5}
 .mbtns{display:flex;gap:7px;margin-top:16px}
-.mb{flex:1;padding:9px;border-radius:7px;border:1px solid;
+.mdb{flex:1;padding:9px;border-radius:7px;border:1px solid;
   font-family:var(--F);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s}
-.mb.ok{background:linear-gradient(135deg,var(--blue),var(--violet));
+.mdb.ok{background:linear-gradient(135deg,var(--blue),var(--violet));
   border-color:transparent;color:#fff}
-.mb.ok:hover{box-shadow:0 4px 14px rgba(56,189,248,.3)}
-.mb.no{background:transparent;border-color:var(--b2);color:var(--sub)}
-.mb.no:hover{color:var(--txt)}
+.mdb.ok:hover{box-shadow:0 4px 14px rgba(56,189,248,.3)}
+.mdb.no{background:transparent;border-color:var(--b2);color:var(--sub)}
+.mdb.no:hover{color:var(--txt)}
+.mdb.del{background:rgba(248,113,113,.12);border-color:rgba(248,113,113,.35);
+  color:var(--red);flex:0 0 auto;padding:9px 16px}
+.mdb.del:hover{background:rgba(248,113,113,.22);border-color:var(--red)}
+
+/* key status badge */
+.kstat{display:flex;align-items:center;gap:7px;padding:7px 10px;
+  border-radius:7px;margin-bottom:12px;font-size:11px;font-family:var(--M)}
+.kstat.active{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.22);color:var(--green)}
+.kstat.empty{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.22);color:var(--red)}
+.kstat-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.kstat.active .kstat-dot{background:var(--green)}
+.kstat.empty .kstat-dot{background:var(--red)}
 
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -295,17 +305,25 @@ input[type=range]{width:44px;accent-color:var(--blue);cursor:pointer}
 <div class="mbg" id="mbg">
   <div class="mdl">
     <div class="mt">⚙️ OpenRouter API Setup</div>
-    <div class="ms">Your API key is already saved. You can change it here anytime.</div>
-    <div class="tip">
-      <b>Get / manage your key:</b> <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a><br>
-      The key starts with <b>sk-or-v1-...</b><br>
-      All models marked <b>FREE</b> cost nothing to use.
+    <div class="ms">Configure your API key and vision model. Your key is stored only in this browser.</div>
+
+    <!-- Key status badge -->
+    <div class="kstat" id="kstat">
+      <div class="kstat-dot"></div>
+      <span id="kstatTxt">Checking...</span>
     </div>
+
+    <div class="tip">
+      <b>Get your free key:</b> <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a><br>
+      The key starts with <b>sk-or-v1-...</b> &nbsp;·&nbsp; All <b>FREE</b> models cost nothing to use.
+    </div>
+
     <div class="fl">
       <label>OpenRouter API Key</label>
       <input type="password" id="kIn" placeholder="sk-or-v1-••••••••••••••••••••••••••••••"/>
-      <div class="hint">Key is saved in your browser only. It calls OpenRouter directly — nothing goes to any other server.</div>
+      <div class="hint">Saved in your browser only. Calls go directly to OpenRouter — nothing stored on any other server.</div>
     </div>
+
     <div class="fl">
       <label>Vision Model</label>
       <select id="mIn">
@@ -317,11 +335,13 @@ input[type=range]{width:44px;accent-color:var(--blue);cursor:pointer}
         <option value="anthropic/claude-3.5-sonnet">anthropic/claude-3.5-sonnet (Paid)</option>
         <option value="openai/gpt-4o">openai/gpt-4o (Paid)</option>
       </select>
-      <div class="hint">If one model fails, try another. All FREE ones support images.</div>
+      <div class="hint">If one model fails, try another. All FREE ones support image vision.</div>
     </div>
+
     <div class="mbtns">
-      <button class="mb no" onclick="closeModal()">Cancel</button>
-      <button class="mb ok" onclick="saveSettings()">💾 Save &amp; Activate</button>
+      <button class="mdb no" onclick="closeModal()">Cancel</button>
+      <button class="mdb del" onclick="removeKey()" title="Delete saved API key">🗑 Remove Key</button>
+      <button class="mdb ok" onclick="saveSettings()">💾 Save &amp; Activate</button>
     </div>
   </div>
 </div>
@@ -469,134 +489,162 @@ input[type=range]{width:44px;accent-color:var(--blue);cursor:pointer}
       </div>
     </div>
 
-  </div><!-- /main -->
-</div><!-- /wrap -->
+  </div>
+</div>
 
 <script>
 'use strict';
 
-// ════════════════════════════════════════════════
-//  CONFIG  — your key is pre-saved here
-//  User can change via ⚙️ API Setup anytime
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════
 const FALLBACK_KEY   = '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';
 const FALLBACK_MODEL = 'google/gemini-2.0-flash-001';
 const OR_ENDPOINT    = 'https://openrouter.ai/api/v1/chat/completions';
 
-// Load from localStorage (user's saved choice) OR use fallback
 let KEY   = localStorage.getItem('or_key')   || FALLBACK_KEY;
 let MODEL = localStorage.getItem('or_model') || FALLBACK_MODEL;
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  STATE
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 let sv=0, sr=1, sp=1;
 let voices=[], rec=null, isRec=false;
-let bulkFiles=[];       // sidebar images
-let pendingImgs=[];     // images attached in chat input
-let history=[];         // conversation turns  [{role,content}]
-let lastMeta=null;      // last parsed analysis metadata
+let bulkFiles=[];
+let pendingImgs=[];
+let history=[];
+let lastMeta=null;
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  CLOCK
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 setInterval(()=>{
   document.getElementById('clk').textContent =
-    new Date().toLocaleTimeString('en-IN',{hour12:false}) + ' IST';
-}, 1000);
+    new Date().toLocaleTimeString('en-IN',{hour12:false})+' IST';
+},1000);
 
-// ════════════════════════════════════════════════
-//  MODAL
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
+//  MODAL — open / close / save / REMOVE
+// ════════════════════════════════════
 function openModal(){
-  document.getElementById('kIn').value = KEY;
+  // pre-fill current key (masked) and model
+  const saved = localStorage.getItem('or_key') || '';
+  document.getElementById('kIn').value = saved;
   document.getElementById('mIn').value = MODEL;
+  // show key status badge
+  const badge = document.getElementById('kstat');
+  const txt   = document.getElementById('kstatTxt');
+  if(saved){
+    badge.className='kstat active';
+    txt.textContent = 'API key active · ' + saved.slice(0,14) + '••••••••••••••••••••';
+  } else {
+    badge.className='kstat empty';
+    txt.textContent = 'No API key saved — using built-in fallback key';
+  }
   document.getElementById('mbg').classList.add('open');
 }
-function closeModal(){ document.getElementById('mbg').classList.remove('open'); }
+
+function closeModal(){
+  document.getElementById('mbg').classList.remove('open');
+}
 
 function saveSettings(){
   const k = document.getElementById('kIn').value.trim();
   const m = document.getElementById('mIn').value;
-  if(!k){ alert('Please enter your API key.'); return; }
+  if(!k){ alert('Please enter your OpenRouter API key.'); return; }
   KEY = k; MODEL = m;
   localStorage.setItem('or_key',   KEY);
   localStorage.setItem('or_model', MODEL);
   closeModal();
   refreshRunBtn();
-  document.getElementById('stxt').textContent = MODEL.split('/').pop().toUpperCase() + ' READY';
+  document.getElementById('stxt').textContent = MODEL.split('/').pop().toUpperCase()+' READY';
   hideWel();
-  bot('✅ Settings saved!\n\nNow running **' + MODEL + '**.\n\nSend me a bridge photo using the 📎 button and I will analyze every crack, corrosion, and structural issue I can see. Or ask me anything about bridge safety!');
+  bot('✅ API key saved!\n\nNow running **'+MODEL+'**.\n\nSend me a bridge photo using the 📎 button and I will analyze every crack, corrosion, and structural issue I can see. Or ask me anything about bridge safety!\n\n*Tip: You can remove your key anytime via ⚙️ API Setup → 🗑 Remove Key.*');
 }
 
-// ════════════════════════════════════════════════
-//  FILE → DATA URL  (includes "data:image/jpeg;base64,...")
-// ════════════════════════════════════════════════
+// ─── REMOVE KEY (new) ───────────────────────────────
+function removeKey(){
+  const had = localStorage.getItem('or_key');
+  // Clear from localStorage
+  localStorage.removeItem('or_key');
+  localStorage.removeItem('or_model');
+  // Reset in-memory to fallback
+  KEY   = FALLBACK_KEY;
+  MODEL = FALLBACK_MODEL;
+  // Reset modal UI
+  document.getElementById('kIn').value = '';
+  document.getElementById('mIn').value = FALLBACK_MODEL;
+  // Update badge immediately
+  const badge = document.getElementById('kstat');
+  const txt   = document.getElementById('kstatTxt');
+  badge.className = 'kstat empty';
+  txt.textContent = 'Key removed — using built-in fallback key';
+  // Update top bar
+  document.getElementById('stxt').textContent = 'VISION AI ONLINE';
+  refreshRunBtn();
+  closeModal();
+  hideWel();
+  if(had){
+    bot('🗑 **API key removed successfully.**\n\nYour saved key has been cleared from this browser.\n\nThe app will now use the built-in fallback key.\n\nTo add a new key anytime → click **⚙️ API Setup** → paste your key → **Save & Activate**.\n\nGet a free key at: openrouter.ai/keys');
+  } else {
+    bot('ℹ️ No saved key was found — nothing to remove.\n\nClick **⚙️ API Setup** to add your own key.');
+  }
+}
+
+// ════════════════════════════════════
+//  FILE → DATA URL
+// ════════════════════════════════════
 function fileToDataURL(file){
-  return new Promise((ok, fail)=>{
-    const r = new FileReader();
-    r.onload  = () => ok(r.result);
-    r.onerror = fail;
+  return new Promise((ok,fail)=>{
+    const r=new FileReader();
+    r.onload =()=>ok(r.result);
+    r.onerror=fail;
     r.readAsDataURL(file);
   });
 }
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  OPENROUTER API CALL
-//  Standard OpenAI-compatible format
-//  Images: {type:"image_url", image_url:{url:"data:image/jpeg;base64,..."}}
-// ════════════════════════════════════════════════
-async function callOR(messages, attempt=0){
-  const res = await fetch(OR_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + KEY,
-      'Content-Type':  'application/json',
-      'HTTP-Referer':  'http://localhost:5000',
-      'X-Title':       'AegisBridge'
+// ════════════════════════════════════
+async function callOR(messages,attempt=0){
+  const res=await fetch(OR_ENDPOINT,{
+    method:'POST',
+    headers:{
+      'Authorization':'Bearer '+KEY,
+      'Content-Type' :'application/json',
+      'HTTP-Referer'  :'http://localhost:5000',
+      'X-Title'       :'AegisBridge'
     },
-    body: JSON.stringify({
-      model:       MODEL,
-      messages:    messages,
-      max_tokens:  2048,
-      temperature: 0.4
+    body:JSON.stringify({
+      model:MODEL, messages, max_tokens:2048, temperature:0.4
     })
   });
-
-  // Parse response
-  const data = await res.json().catch(()=>null);
-
+  const data=await res.json().catch(()=>null);
   if(!res.ok){
-    const code = data?.error?.code || res.status;
-    const msg  = data?.error?.message || 'HTTP ' + res.status;
-
-    // Rate limit → retry once after delay
-    if((code===429 || res.status===429) && attempt < 2){
-      await delay(3000);
-      return callOR(messages, attempt+1);
-    }
+    const code=data?.error?.code||res.status;
+    const msg =data?.error?.message||'HTTP '+res.status;
+    if((code===429||res.status===429)&&attempt<2){await delay(3000);return callOR(messages,attempt+1);}
     if(res.status===401) throw new Error('BAD_KEY');
     if(res.status===402) throw new Error('NO_CREDITS');
-    if(res.status===404) throw new Error('BAD_MODEL:' + MODEL);
-    throw new Error('API_' + res.status + ': ' + msg.slice(0,120));
+    if(res.status===404) throw new Error('BAD_MODEL:'+MODEL);
+    throw new Error('API_'+res.status+': '+msg.slice(0,120));
   }
-
-  const text = data?.choices?.[0]?.message?.content;
+  const text=data?.choices?.[0]?.message?.content;
   if(!text) throw new Error('Empty response from model. Try again.');
   return text;
 }
 
-const delay = ms => new Promise(r => setTimeout(r, ms));
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  SYSTEM PROMPT
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 function systemPrompt(){
   return `You are AEGIS, a friendly and expert AI bridge structural inspector, built for the AegisBridge final-year civil engineering project.
 
 EXPERTISE:
 - Bridge damage: cracks (hairline <0.1mm, fine 0.1-0.3mm, medium 0.3-1mm, wide >1mm), corrosion, spalling, rebar exposure, deformation, honeycombing
-- Crack patterns: longitudinal, transverse, diagonal, map/alligator cracking  
+- Crack patterns: longitudinal, transverse, diagonal, map/alligator cracking
 - Indian codes: IRC:6, IRC:21, IRC:SP:35, IS:456, IS:1893, IS:3370, IS:800
 - Railway: RDSO B-series codes, IRS Bridge Rules
 - Repair: epoxy injection, polyurethane sealants, CFRP reinforcement, shotcrete, cathodic protection, waterproofing
@@ -617,76 +665,58 @@ WHEN ANSWERING QUESTIONS:
 - Reference previous analysis if asked about results
 - Be encouraging — this is a student project
 
-Context: ${lastMeta ? 'Last analysis: Severity='+lastMeta.sev+', Health='+lastMeta.h+'/100, Risk='+lastMeta.r : 'No analysis yet.'}`;
+Context: ${lastMeta?'Last analysis: Severity='+lastMeta.sev+', Health='+lastMeta.h+'/100, Risk='+lastMeta.r:'No analysis yet.'}`;
 }
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  ATTACH IMAGES (chat input)
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 async function attach(files){
   for(const f of Array.from(files)){
-    const du = await fileToDataURL(f);
-    pendingImgs.push({ f, du });
+    const du=await fileToDataURL(f);
+    pendingImgs.push({f,du});
   }
   renderPreviews();
-  document.getElementById('fim').value = '';
+  document.getElementById('fim').value='';
 }
-
 function renderPreviews(){
-  const box = document.getElementById('imgs');
-  box.innerHTML = '';
-  pendingImgs.forEach((img, i)=>{
-    const d = document.createElement('div');
-    d.className = 'ip';
-    d.innerHTML = `<img src="${img.du}"/><button class="xp" onclick="rmPending(${i})">✕</button>`;
+  const box=document.getElementById('imgs');
+  box.innerHTML='';
+  pendingImgs.forEach((img,i)=>{
+    const d=document.createElement('div');d.className='ip';
+    d.innerHTML=`<img src="${img.du}"/><button class="xp" onclick="rmPending(${i})">✕</button>`;
     box.appendChild(d);
   });
 }
-function rmPending(i){ pendingImgs.splice(i,1); renderPreviews(); }
+function rmPending(i){pendingImgs.splice(i,1);renderPreviews();}
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  SEND CHAT MESSAGE
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 async function send(){
-  const taEl   = document.getElementById('ta');
-  const text   = taEl.value.trim();
-  const imgs   = [...pendingImgs];
-
-  if(!text && !imgs.length) return;
-
-  // Reset input
-  taEl.value = ''; grow(taEl);
-  pendingImgs = []; renderPreviews();
+  const taEl=document.getElementById('ta');
+  const text=taEl.value.trim();
+  const imgs=[...pendingImgs];
+  if(!text&&!imgs.length) return;
+  taEl.value='';grow(taEl);
+  pendingImgs=[];renderPreviews();
   hideWel();
-
-  // Show user bubble (with image thumbnails + text)
-  userBubble(text, imgs);
-
+  userBubble(text,imgs);
   if(!KEY){
     bot('I need an API key! Click **API Setup** (top right) — your key is already pre-filled. Just click **Save & Activate**.');
     return;
   }
-
-  const tid = typing();
-  document.getElementById('csub').textContent = 'Thinking...';
-
+  const tid=typing();
+  document.getElementById('csub').textContent='Thinking...';
   try{
-    // Build content array for this message
-    // OpenAI vision format: [{type:"image_url",...}, {type:"text",...}]
-    const content = [];
-
+    const content=[];
     for(const img of imgs){
-      content.push({
-        type: 'image_url',
-        image_url: { url: img.du }  // data URL with base64
-      });
+      content.push({type:'image_url',image_url:{url:img.du}});
     }
-
     if(text){
-      content.push({ type:'text', text });
+      content.push({type:'text',text});
     } else if(imgs.length){
-      // No text but images sent → auto-prompt
-      content.push({ type:'text', text:
+      content.push({type:'text',text:
         'Analyze this bridge image. Tell me:\n'+
         '1. All visible damage (exact location, crack type, pattern, approximate width)\n'+
         '2. Severity level (NONE/MINOR/MODERATE/SEVERE/CRITICAL)\n'+
@@ -696,96 +726,79 @@ async function send(){
         '6. Applicable Indian IRC/IS standards'
       });
     }
-
-    // Full messages for this call: system + history + new message
-    const messages = [
-      { role: 'system',  content: systemPrompt() },
+    const messages=[
+      {role:'system', content:systemPrompt()},
       ...history,
-      { role: 'user',    content }
+      {role:'user',   content}
     ];
-
-    const reply = await callOR(messages);
-
-    // Save this exchange to history (plain text for history, not images — to keep it short)
-    history.push({ role:'user',      content: text || '[bridge image]' });
-    history.push({ role:'assistant', content: reply });
-    // Keep last 30 turns
-    if(history.length > 60) history = history.slice(-60);
-
+    const reply=await callOR(messages);
+    history.push({role:'user',      content:text||'[bridge image]'});
+    history.push({role:'assistant', content:reply});
+    if(history.length>60) history=history.slice(-60);
     removeTyping(tid);
     bot(reply);
-
-    // Update sidebar if image(s) sent
     if(imgs.length){
-      const meta = parseMeta(reply);
-      meta.imgCount = imgs.length;
+      const meta=parseMeta(reply);
+      meta.imgCount=imgs.length;
       updateSidebar(meta);
-      lastMeta = meta;
-      document.getElementById('mI').textContent = imgs.length;
+      lastMeta=meta;
+      document.getElementById('mI').textContent=imgs.length;
     }
-
-  } catch(err){
+  }catch(err){
     removeTyping(tid);
     handleErr(err);
   }
-
-  document.getElementById('csub').textContent = 'OpenRouter Vision AI · Send images or ask anything';
+  document.getElementById('csub').textContent='OpenRouter Vision AI · Send images or ask anything';
 }
 
-// Quick prompt buttons
-function q(text){ document.getElementById('ta').value = text; send(); }
+function q(text){document.getElementById('ta').value=text;send();}
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  BULK SIDEBAR ANALYSIS
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 function addBulk(files){
-  Array.from(files).forEach(f =>{
-    if(!bulkFiles.find(x => x.name === f.name)) bulkFiles.push(f);
+  Array.from(files).forEach(f=>{
+    if(!bulkFiles.find(x=>x.name===f.name)) bulkFiles.push(f);
   });
   renderThumbs();
-  document.getElementById('bIn').value = '';
+  document.getElementById('bIn').value='';
 }
 function renderThumbs(){
-  const c = document.getElementById('ths'); c.innerHTML='';
+  const c=document.getElementById('ths');c.innerHTML='';
   bulkFiles.forEach((f,i)=>{
-    const url = URL.createObjectURL(f);
-    const d   = document.createElement('div'); d.className='th';
+    const url=URL.createObjectURL(f);
+    const d=document.createElement('div');d.className='th';
     d.innerHTML=`<img src="${url}"/><button class="xx" onclick="delBulk(${i});event.stopPropagation()">✕</button>`;
     c.appendChild(d);
   });
   refreshRunBtn();
 }
-function delBulk(i){ bulkFiles.splice(i,1); renderThumbs(); }
-function refreshRunBtn(){ document.getElementById('runBtn').disabled = bulkFiles.length===0 || !KEY; }
+function delBulk(i){bulkFiles.splice(i,1);renderThumbs();}
+function refreshRunBtn(){document.getElementById('runBtn').disabled=bulkFiles.length===0||!KEY;}
 
-// Drag & drop
-const dz = document.getElementById('dz');
-dz.addEventListener('dragover', e =>{ e.preventDefault(); dz.classList.add('on'); });
-dz.addEventListener('dragleave', ()=> dz.classList.remove('on'));
-dz.addEventListener('drop', e =>{ e.preventDefault(); dz.classList.remove('on'); addBulk(e.dataTransfer.files); });
+const dz=document.getElementById('dz');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('on');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('on'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('on');addBulk(e.dataTransfer.files);});
 
 async function runBulk(){
-  if(!bulkFiles.length || !KEY) return;
-  const btn = document.getElementById('runBtn');
-  btn.disabled = true; btn.textContent = '⏳ Analyzing...';
+  if(!bulkFiles.length||!KEY) return;
+  const btn=document.getElementById('runBtn');
+  btn.disabled=true;btn.textContent='⏳ Analyzing...';
   hideWel();
-
-  const n = bulkFiles.length;
-  userBubble('Running full structural report on '+n+' bridge image'+(n>1?'s':'')+'...', []);
-  const tid = typing();
-  setProg('Preparing images...', 5);
-
+  const n=bulkFiles.length;
+  userBubble('Running full structural report on '+n+' bridge image'+(n>1?'s':'')+'...',[]);
+  const tid=typing();
+  setProg('Preparing images...',5);
   try{
-    // Build content with all images
-    const content = [];
-    for(let i=0; i<n; i++){
-      setProg('Reading image '+(i+1)+'/'+n, 5 + Math.round(i/n*50));
-      const du = await fileToDataURL(bulkFiles[i]);
-      content.push({ type:'image_url', image_url:{ url: du } });
-      content.push({ type:'text', text:'(Image '+(i+1)+': '+bulkFiles[i].name+')' });
+    const content=[];
+    for(let i=0;i<n;i++){
+      setProg('Reading image '+(i+1)+'/'+n,5+Math.round(i/n*50));
+      const du=await fileToDataURL(bulkFiles[i]);
+      content.push({type:'image_url',image_url:{url:du}});
+      content.push({type:'text',text:'(Image '+(i+1)+': '+bulkFiles[i].name+')'});
     }
-
-    content.push({ type:'text', text:
+    content.push({type:'text',text:
       'Analyze ALL '+n+' bridge image(s) above. Give a COMPLETE structural health report.\n\n'+
       '## VISUAL OBSERVATIONS\n'+
       'For each image: describe all structural elements visible, every damage (cracks with location/pattern/estimated width), corrosion, spalling, exposed rebar, deformation.\n\n'+
@@ -810,32 +823,19 @@ async function runBulk(){
       'List relevant IRC/IS/RDSO codes for the damage found.\n\n'+
       'Only describe what you can actually see in the images.'
     });
-
-    setProg('AI Vision analyzing...', 62);
-
-    const messages = [
-      { role:'system', content: systemPrompt() },
-      { role:'user',   content }
-    ];
-    const result = await callOR(messages);
-
-    setProg('Complete!', 100);
-
-    // Add summary to history
-    history.push({ role:'user',      content: '['+n+' bridge images analyzed via bulk report]' });
-    history.push({ role:'assistant', content: result });
-
-    const meta = parseMeta(result);
-    meta.imgCount = n;
-    lastMeta = meta;
+    setProg('AI Vision analyzing...',62);
+    const messages=[{role:'system',content:systemPrompt()},{role:'user',content}];
+    const result=await callOR(messages);
+    setProg('Complete!',100);
+    history.push({role:'user',      content:'['+n+' bridge images analyzed via bulk report]'});
+    history.push({role:'assistant', content:result});
+    const meta=parseMeta(result);
+    meta.imgCount=n;lastMeta=meta;
     updateSidebar(meta);
-
-    removeTyping(tid); hideProg();
-
-    // Render report card
-    const sc = meta.sev==='SEVERE'?'cr':meta.sev==='MODERATE'?'cy':'cg';
-    const rc = meta.r==='CRITICAL'?'cr':meta.r==='ELEVATED'?'cy':'cg';
-    const html =
+    removeTyping(tid);hideProg();
+    const sc=meta.sev==='SEVERE'?'cr':meta.sev==='MODERATE'?'cy':'cg';
+    const rc=meta.r==='CRITICAL'?'cr':meta.r==='ELEVATED'?'cy':'cg';
+    const html=
       '<div class="rh">🔬 AEGIS STRUCTURAL REPORT — OPENROUTER VISION AI</div>'+
       '<div class="cr-r">'+
         '<span class="chip '+sc+'">'+meta.sev+'</span>'+
@@ -852,241 +852,224 @@ async function runBulk(){
         '💬 <b style="color:var(--blue)">Ask me anything</b> about these results — repair steps, costs, who to call, specific cracks, or anything else.'+
       '</div>';
     rawBubble(html);
-
     speak('Analysis complete. Bridge health score '+meta.h+' out of 100. Severity '+meta.sev+'. '+
       (meta.r==='CRITICAL'?'Emergency action required immediately.':
        meta.r==='ELEVATED'?'Urgent inspection within 7 days.':'Routine maintenance recommended.'));
-
-  } catch(err){
-    removeTyping(tid); hideProg();
+  }catch(err){
+    removeTyping(tid);hideProg();
     handleErr(err);
   }
-
-  btn.disabled = bulkFiles.length===0 || !KEY;
-  btn.textContent = '🔍 Analyze & Generate Report';
+  btn.disabled=bulkFiles.length===0||!KEY;
+  btn.textContent='🔍 Analyze & Generate Report';
 }
 
-// ════════════════════════════════════════════════
-//  ERROR MESSAGES
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
+//  ERROR HANDLER
+// ════════════════════════════════════
 function handleErr(err){
-  const m = err.message || '';
-  if(m === 'BAD_KEY'){
+  const m=err.message||'';
+  if(m==='BAD_KEY'){
     bot('❌ **Invalid API key.**\n\nClick **API Setup** and re-enter your key.\nMake sure it starts with **sk-or-v1-...**\nGet a key at: openrouter.ai/keys');
-  } else if(m === 'NO_CREDITS'){
+  } else if(m==='NO_CREDITS'){
     bot('❌ **No credits / quota exceeded.**\n\nEither:\n- Use a FREE model in **API Setup** (e.g. google/gemini-2.0-flash-001)\n- Or add credits at openrouter.ai/credits');
   } else if(m.startsWith('BAD_MODEL')){
     bot('❌ **Model not found:** `'+MODEL+'`\n\nClick **API Setup** and select a different model.\nTry: **google/gemini-2.0-flash-001** (free & works great)');
-  } else if(m.includes('429') || m.includes('RATE')){
+  } else if(m.includes('429')||m.includes('RATE')){
     bot('⚠️ **Rate limit hit.** The model is busy.\n\nWait 30-60 seconds and try again.\nOr switch to a different free model in **API Setup**.');
-  } else if(m.includes('Failed to fetch') || m.includes('Load failed') || m.includes('NetworkError')){
+  } else if(m.includes('Failed to fetch')||m.includes('Load failed')||m.includes('NetworkError')){
     bot('❌ **Cannot connect to OpenRouter.**\n\nMake sure:\n- **run.bat** CMD window is still open\n- You are at **http://localhost:5000** (not file://)\n- Your internet is working');
   } else {
     bot('❌ Error: '+m+'\n\nTry:\n1. Open **API Setup** → choose **google/gemini-2.0-flash-001**\n2. Make sure run.bat window is open\n3. Wait 30 seconds and retry');
   }
 }
 
-// ════════════════════════════════════════════════
-//  PARSE METADATA FROM REPLY
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
+//  PARSE METADATA
+// ════════════════════════════════════
 function parseMeta(txt){
-  const t = txt.toLowerCase();
-  let sev='MINOR', h=72, r='LOW', conf=88, color='var(--green)', imgCount=0;
-
-  // Health score
-  const hm = txt.match(/health\s*score[:\s]*(\d+)/i);
-  if(hm) h = parseInt(hm[1]);
-
-  // Severity
-  if(/severity:\s*(severe|critical)/i.test(txt) || /condition:\s*critical/i.test(txt)){
-    sev='SEVERE'; r='CRITICAL'; color='var(--red)'; if(!hm) h=28;
-  } else if(/severity:\s*moderate/i.test(txt) || /condition:\s*poor/i.test(txt)){
-    sev='MODERATE'; r='ELEVATED'; color='var(--amber)'; if(!hm) h=55;
-  } else if(/condition:\s*good/i.test(txt) || /severity:\s*none/i.test(txt)){
-    sev='GOOD'; r='LOW'; color='var(--green)'; if(!hm) h=88;
+  const t=txt.toLowerCase();
+  let sev='MINOR',h=72,r='LOW',conf=88,color='var(--green)',imgCount=0;
+  const hm=txt.match(/health\s*score[:\s]*(\d+)/i);
+  if(hm) h=parseInt(hm[1]);
+  if(/severity:\s*(severe|critical)/i.test(txt)||/condition:\s*critical/i.test(txt)){
+    sev='SEVERE';r='CRITICAL';color='var(--red)';if(!hm)h=28;
+  } else if(/severity:\s*moderate/i.test(txt)||/condition:\s*poor/i.test(txt)){
+    sev='MODERATE';r='ELEVATED';color='var(--amber)';if(!hm)h=55;
+  } else if(/condition:\s*good/i.test(txt)||/severity:\s*none/i.test(txt)){
+    sev='GOOD';r='LOW';color='var(--green)';if(!hm)h=88;
   } else {
-    // keyword fallback
-    const hi = ['wide crack','collapse','failure','severe corrosion','critical'].filter(k=>t.includes(k)).length;
-    const mi = ['crack','damage','corrosion','spalling','deteriorat','rust'].filter(k=>t.includes(k)).length;
-    if(hi >= 2){ sev='SEVERE'; r='CRITICAL'; color='var(--red)'; if(!hm) h=28; }
-    else if(mi >= 3){ sev='MODERATE'; r='ELEVATED'; color='var(--amber)'; if(!hm) h=55; }
+    const hi=['wide crack','collapse','failure','severe corrosion','critical'].filter(k=>t.includes(k)).length;
+    const mi=['crack','damage','corrosion','spalling','deteriorat','rust'].filter(k=>t.includes(k)).length;
+    if(hi>=2){sev='SEVERE';r='CRITICAL';color='var(--red)';if(!hm)h=28;}
+    else if(mi>=3){sev='MODERATE';r='ELEVATED';color='var(--amber)';if(!hm)h=55;}
   }
-
-  h = Math.max(5, Math.min(100, h));
-  return { sev, h, r, conf, color, imgCount };
+  h=Math.max(5,Math.min(100,h));
+  return{sev,h,r,conf,color,imgCount};
 }
 
-// ════════════════════════════════════════════════
-//  FORMAT REPORT TEXT → HTML
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
+//  FORMAT REPORT
+// ════════════════════════════════════
 function fmtReport(txt){
   return txt
-    .replace(/^## (.+)$/gm, '<span class="sh">$1</span>')
-    .replace(/^### (.+)$/gm, '<b style="color:var(--green)">$1</b><br>')
-    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
-    .replace(/\*(.+?)\*/g,   '<i>$1</i>')
+    .replace(/^## (.+)$/gm,'<span class="sh">$1</span>')
+    .replace(/^### (.+)$/gm,'<b style="color:var(--green)">$1</b><br>')
+    .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+    .replace(/\*(.+?)\*/g,'<i>$1</i>')
     .replace(/^[-•] (.+)$/gm,'<span style="display:block;margin-left:10px;color:var(--sub)">• $1</span>')
-    .replace(/\n/g, '<br>');
+    .replace(/\n/g,'<br>');
 }
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  SIDEBAR UPDATE
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 function updateSidebar(m){
-  const C=276.46, off=C-(C*m.h/100);
-  document.getElementById('arc').style.strokeDashoffset = off;
-  document.getElementById('arc').style.stroke           = m.color;
-  document.getElementById('sco').textContent = m.h;
-  document.getElementById('rl').textContent  = 'HEALTH '+m.h+'%';
-
-  const cl = {SEVERE:'var(--red)',MODERATE:'var(--amber)',MINOR:'var(--green)',GOOD:'var(--green)'};
-  const bdg = document.getElementById('bdg');
-  bdg.textContent        = m.sev;
-  bdg.style.borderColor  = cl[m.sev]||'var(--dim)';
-  bdg.style.color        = cl[m.sev]||'var(--dim)';
-
-  document.getElementById('mS').textContent  = m.sev;
-  document.getElementById('mS').style.color  = cl[m.sev]||'var(--dim)';
-  document.getElementById('mSs').textContent = m.sev==='SEVERE'?'critical':m.sev==='MODERATE'?'moderate':'minor/none';
-  document.getElementById('mC').textContent  = m.conf+'%';
-  document.getElementById('mC').style.color  = m.color;
-  document.getElementById('mCb').style.width      = m.conf+'%';
-  document.getElementById('mCb').style.background = m.color;
-  if(m.imgCount) document.getElementById('mI').textContent = m.imgCount;
-  document.getElementById('mR').textContent  = m.r;
-  document.getElementById('mR').style.color  = cl[m.sev]||'var(--dim)';
-  document.getElementById('mRs').textContent = m.r==='CRITICAL'?'act NOW':m.r==='ELEVATED'?'urgent':'routine';
-
-  const am = {
-    SEVERE: {c:'danger', i:'🚨', t:'CRITICAL: Immediate risk. Emergency inspection required NOW. Stop all traffic.'},
-    MODERATE:{c:'warn',  i:'⚡', t:'WARNING: Moderate damage. Get engineering inspection within 7 days.'},
-    MINOR:  {c:'safe',  i:'✅', t:'SAFE: Minor wear. Bridge operational. Routine maintenance within 30 days.'},
-    GOOD:   {c:'safe',  i:'✅', t:'GOOD: No significant damage found. Continue periodic inspections.'}
+  const C=276.46,off=C-(C*m.h/100);
+  document.getElementById('arc').style.strokeDashoffset=off;
+  document.getElementById('arc').style.stroke=m.color;
+  document.getElementById('sco').textContent=m.h;
+  document.getElementById('rl').textContent='HEALTH '+m.h+'%';
+  const cl={SEVERE:'var(--red)',MODERATE:'var(--amber)',MINOR:'var(--green)',GOOD:'var(--green)'};
+  const bdg=document.getElementById('bdg');
+  bdg.textContent=m.sev;bdg.style.borderColor=cl[m.sev]||'var(--dim)';bdg.style.color=cl[m.sev]||'var(--dim)';
+  document.getElementById('mS').textContent=m.sev;
+  document.getElementById('mS').style.color=cl[m.sev]||'var(--dim)';
+  document.getElementById('mSs').textContent=m.sev==='SEVERE'?'critical':m.sev==='MODERATE'?'moderate':'minor/none';
+  document.getElementById('mC').textContent=m.conf+'%';
+  document.getElementById('mC').style.color=m.color;
+  document.getElementById('mCb').style.width=m.conf+'%';
+  document.getElementById('mCb').style.background=m.color;
+  if(m.imgCount) document.getElementById('mI').textContent=m.imgCount;
+  document.getElementById('mR').textContent=m.r;
+  document.getElementById('mR').style.color=cl[m.sev]||'var(--dim)';
+  document.getElementById('mRs').textContent=m.r==='CRITICAL'?'act NOW':m.r==='ELEVATED'?'urgent':'routine';
+  const am={
+    SEVERE:{c:'danger',i:'🚨',t:'CRITICAL: Immediate risk. Emergency inspection required NOW. Stop all traffic.'},
+    MODERATE:{c:'warn',i:'⚡',t:'WARNING: Moderate damage. Get engineering inspection within 7 days.'},
+    MINOR:{c:'safe',i:'✅',t:'SAFE: Minor wear. Bridge operational. Routine maintenance within 30 days.'},
+    GOOD:{c:'safe',i:'✅',t:'GOOD: No significant damage found. Continue periodic inspections.'}
   };
-  const a = am[m.sev] || am.MINOR;
-  document.getElementById('alc').className = 'al '+a.c;
-  document.getElementById('alc').querySelector('.al-i').textContent = a.i;
-  document.getElementById('alt').textContent = a.t;
+  const a=am[m.sev]||am.MINOR;
+  document.getElementById('alc').className='al '+a.c;
+  document.getElementById('alc').querySelector('.al-i').textContent=a.i;
+  document.getElementById('alt').textContent=a.t;
 }
 
-function setProg(l,p){ document.getElementById('prg').style.display='block'; document.getElementById('prgl').textContent=l; document.getElementById('prgf').style.width=p+'%'; }
-function hideProg(){ document.getElementById('prg').style.display='none'; }
+function setProg(l,p){document.getElementById('prg').style.display='block';document.getElementById('prgl').textContent=l;document.getElementById('prgf').style.width=p+'%';}
+function hideProg(){document.getElementById('prg').style.display='none';}
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  CHAT UI HELPERS
-// ════════════════════════════════════════════════
-function hideWel(){ const w=document.getElementById('wel'); if(w) w.remove(); }
+// ════════════════════════════════════
+function hideWel(){const w=document.getElementById('wel');if(w)w.remove();}
 
-function userBubble(text, imgs){
+function userBubble(text,imgs){
   hideWel();
-  const box = document.getElementById('msgs');
-  const d   = document.createElement('div'); d.className='msg u';
-  let inner = '';
-  imgs.forEach(img => { inner += `<img class="bub-img" src="${img.du}"/>`; });
-  if(text) inner += esc(text);
-  d.innerHTML = `<div class="av">👤</div><div class="bub">${inner}</div>`;
-  box.appendChild(d); box.scrollTop = box.scrollHeight;
+  const box=document.getElementById('msgs');
+  const d=document.createElement('div');d.className='msg u';
+  let inner='';
+  imgs.forEach(img=>{inner+=`<img class="bub-img" src="${img.du}"/>`; });
+  if(text) inner+=esc(text);
+  d.innerHTML=`<div class="av">👤</div><div class="bub">${inner}</div>`;
+  box.appendChild(d);box.scrollTop=box.scrollHeight;
 }
 
 function bot(text){
   hideWel();
-  const html = text
-    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
-    .replace(/\*(.+?)\*/g,    '<i>$1</i>')
-    .replace(/^[-•] (.+)$/gm, '<span style="display:block;margin-left:10px;color:var(--sub)">• $1</span>')
-    .replace(/\n/g, '<br>');
+  const html=text
+    .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+    .replace(/\*(.+?)\*/g,'<i>$1</i>')
+    .replace(/^[-•] (.+)$/gm,'<span style="display:block;margin-left:10px;color:var(--sub)">• $1</span>')
+    .replace(/\n/g,'<br>');
   rawBubble(html);
   speak(text.replace(/[*_#`]/g,'').replace(/<[^>]+>/g,'').slice(0,280));
 }
 
 function rawBubble(html){
   hideWel();
-  const box = document.getElementById('msgs');
-  const d   = document.createElement('div'); d.className='msg a';
-  d.innerHTML = `<div class="av">🤖</div><div class="bub">${html}</div>`;
-  box.appendChild(d); box.scrollTop = box.scrollHeight;
+  const box=document.getElementById('msgs');
+  const d=document.createElement('div');d.className='msg a';
+  d.innerHTML=`<div class="av">🤖</div><div class="bub">${html}</div>`;
+  box.appendChild(d);box.scrollTop=box.scrollHeight;
 }
 
 function typing(){
   hideWel();
-  const box = document.getElementById('msgs');
-  const id  = 'ty'+Date.now();
-  const d   = document.createElement('div'); d.className='msg a'; d.id=id;
+  const box=document.getElementById('msgs');
+  const id='ty'+Date.now();
+  const d=document.createElement('div');d.className='msg a';d.id=id;
   d.innerHTML='<div class="av">🤖</div><div class="bub"><div class="dots"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>';
-  box.appendChild(d); box.scrollTop=box.scrollHeight;
+  box.appendChild(d);box.scrollTop=box.scrollHeight;
   return id;
 }
-function removeTyping(id){ const e=document.getElementById(id); if(e) e.remove(); }
-function esc(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  VOICE OUTPUT
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 function loadVoices(){
-  voices = window.speechSynthesis.getVoices();
-  const sel = document.getElementById('vs'); sel.innerHTML='';
+  voices=window.speechSynthesis.getVoices();
+  const sel=document.getElementById('vs');sel.innerHTML='';
   voices.forEach((v,i)=>{
-    const o = document.createElement('option'); o.value=i;
-    const n = v.name.length>18 ? v.name.slice(0,18)+'…' : v.name;
-    o.textContent = n+' ['+v.lang+']';
-    if(i===sv) o.selected=true;
+    const o=document.createElement('option');o.value=i;
+    const n=v.name.length>18?v.name.slice(0,18)+'…':v.name;
+    o.textContent=n+' ['+v.lang+']';
+    if(i===sv)o.selected=true;
     sel.appendChild(o);
   });
 }
-window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices();
+window.speechSynthesis.onvoiceschanged=loadVoices;loadVoices();
 function speak(t){
-  if(!window.speechSynthesis) return;
+  if(!window.speechSynthesis)return;
   window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(t);
-  if(voices[sv]) u.voice = voices[sv];
-  u.rate=sr; u.pitch=sp;
+  const u=new SpeechSynthesisUtterance(t);
+  if(voices[sv])u.voice=voices[sv];
+  u.rate=sr;u.pitch=sp;
   window.speechSynthesis.speak(u);
 }
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  VOICE INPUT (MIC)
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 function toggleMic(){
-  if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){
-    bot('⚠️ Voice input needs Chrome or Edge browser.'); return;
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
+    bot('⚠️ Voice input needs Chrome or Edge browser.');return;
   }
-  if(isRec){ rec && rec.stop(); return; }
-  rec = new (window.SpeechRecognition||window.webkitSpeechRecognition)();
-  rec.lang='en-IN'; rec.continuous=false; rec.interimResults=true;
-  rec.onstart = ()=>{
+  if(isRec){rec&&rec.stop();return;}
+  rec=new(window.SpeechRecognition||window.webkitSpeechRecognition)();
+  rec.lang='en-IN';rec.continuous=false;rec.interimResults=true;
+  rec.onstart=()=>{
     isRec=true;
     document.getElementById('micBtn').classList.add('rec');
     document.getElementById('recb').classList.add('on');
   };
-  rec.onresult = e =>{
-    document.getElementById('ta').value =
-      Array.from(e.results).map(r=>r[0].transcript).join('');
+  rec.onresult=e=>{
+    document.getElementById('ta').value=Array.from(e.results).map(r=>r[0].transcript).join('');
   };
-  rec.onend = ()=>{
+  rec.onend=()=>{
     isRec=false;
     document.getElementById('micBtn').classList.remove('rec');
     document.getElementById('recb').classList.remove('on');
-    if(document.getElementById('ta').value.trim()) send();
+    if(document.getElementById('ta').value.trim())send();
   };
   rec.start();
 }
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  UTILS
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 function grow(el){
   el.style.height='auto';
   el.style.height=Math.min(el.scrollHeight,110)+'px';
 }
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════
 //  BOOT
-// ════════════════════════════════════════════════
-window.addEventListener('load', ()=>{
-  document.getElementById('stxt').textContent =
-    MODEL.split('/').pop().toUpperCase() + ' READY';
+// ════════════════════════════════════
+window.addEventListener('load',()=>{
+  document.getElementById('stxt').textContent=MODEL.split('/').pop().toUpperCase()+' READY';
   refreshRunBtn();
-
   setTimeout(()=>{
     bot('👋 Hi! I\'m **AEGIS**, your AI bridge structural inspector!\n\n'+
         'I\'m powered by **'+MODEL+'** via OpenRouter.\n\n'+
@@ -1096,8 +1079,8 @@ window.addEventListener('load', ()=>{
         '**Or just talk to me:**\n'+
         '- Ask about crack types, repair methods, IRC standards, costs — anything!\n'+
         '- Use the quick buttons above for common questions\n\n'+
-        '*Your API key is already configured. Change it anytime via ⚙️ API Setup.*');
-  }, 300);
+        '*Your API key is configured. You can change or remove it anytime via ⚙️ API Setup.*');
+  },300);
 });
 </script>
 </body>
